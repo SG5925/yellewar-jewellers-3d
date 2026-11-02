@@ -2,26 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  html {
+    background: #060509;
+    color-scheme: dark;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    @apply bg-ink-950 font-sans text-ivory antialiased;
+  }
+
+  ::selection {
+    @apply bg-gold-400 text-ink-950;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Animated metallic text fill */
+  .text-gold {
+    @apply bg-gold-gradient bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer;
+  }
+
+  .eyebrow {
+    @apply font-sans text-[0.68rem] font-medium uppercase tracking-luxe text-gold-300;
+  }
+
+  .hairline {
+    @apply h-px bg-gradient-to-r from-transparent via-gold-400/60 to-transparent;
+  }
+
+  /* Vertical location label. Explicit properties (not shorthand utilities) so
+     Chromium-based browsers (Chrome, Edge) lay it out the same way. */
+  .rail-text {
+    writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    letter-spacing: 0.42em;
+    /* letter-spacing also trails the last glyph; matching padding on the other end keeps it centred */
+    padding-top: 0.42em;
+    text-shadow: 0 0 18px rgba(212, 168, 83, 0.25);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+
+  .rail-dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin: 0.9em 0;
+    border-radius: 9999px;
+    background: #d4a853;
+    vertical-align: middle;
+  }
+
+  /* Film grain over the whole page for a photographic feel */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
